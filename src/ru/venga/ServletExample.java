@@ -1,7 +1,6 @@
 package ru.venga;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,11 +11,18 @@ public class ServletExample extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		PrintWriter out = response.getWriter();
+		
+		if( request.getParameter("firstname") == null || request.getParameter("lastname") == null ) {
+			getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+			return;
+		}
+		
 		String firstName = request.getParameter("firstname");
 		String lastName = request.getParameter("lastname");
 		
-		out.println( firstName + " " + lastName );
+		request.setAttribute("firstname", firstName);
+		request.setAttribute("lastname", lastName);
+		getServletContext().getRequestDispatcher("/output.jsp").forward(request, response);
 	}
 
 }
